@@ -1,20 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Bluebird = require("bluebird");
 const cors = require("cors");
-const mongoose = require('mongoose');
 const { printTime, bodyParser, authenticate } = require('./middleware.js');
 const { SECRET_KEY, DATABASE_URL } = require('./secret.js');
 const { HTTP_CREATED, HTTP_UNAUTHORIZED, HTTP_BAD_REQUEST, HTTP_SERVER_ERROR } = require('./constants.js');
 const { Place, User } = require('./database/models.js');
-
-//Database connection
-mongoose.connect(DATABASE_URL).then(connection => {
-    console.log('Connected');
-}).catch(function(err){
-    console.log(err);
-});
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,7 +22,7 @@ app.get('/', function(req, res) {
 //Returns all places from the database
 app.get('/places', authenticate, function(req, res) {
     const user = req.body.user; //Added by authenticate function 
-    Place.find({user_id: user._id}).then(function(places){
+    Place.findAll({where: {userId: user.id}}).then(function(places){
         return res.send({places: places});
     }).catch(function(err){
         return res.status(HTTP_SERVER_ERROR).send({error: 'Server Error'});
@@ -42,7 +33,7 @@ app.get('/places', authenticate, function(req, res) {
 app.post('/places', authenticate, function(req, res) {
     const place = {location: req.body.location, distance: req.body.distance};
     const user = req.body.user;
-    Place.create({location: place.location, distance: place.distance, user_id: user._id})
+    Place.create({location: place.location, distance: place.distance, userId: user.id})
          .then(function(place){
             return res.send({location: place.location});
          })
@@ -53,14 +44,13 @@ app.post('/places', authenticate, function(req, res) {
 
 //Create new user in the database
 app.post('/signup', function(req, res) {
-    console.log(req.body);
     const username = req.body.username;
     const password = req.body.password;
     const hashedPassword = bcrypt.hashSync(password, 10);
     User.create({username: username, password: hashedPassword}).then(function(){
         return res.status(HTTP_CREATED).send('Sign up successful');
     }).catch(function(err){
-        if(err.code === 11000){
+        if(err.name === "SequelizeUniqueConstraintError"){
             return res.status(HTTP_BAD_REQUEST).send('This username is already taken');
         }
         return res.status(HTTP_SERVER_ERROR).send('Server Error');
@@ -72,7 +62,7 @@ app.post('/signin', function(req, res) {
     const username = req.body.username;
     const password = req.body.password;
     //Check if user exists in the database
-    User.findOne({username: username}).then(function(user){
+    User.findOne({where: {username: username}}).then(function(user){
         if(!user){
             return res.status(HTTP_UNAUTHORIZED).send({error: 'Please sign up'}); 
         }

@@ -1,53 +1,24 @@
-create github repo
-clone repo
-npm init
-install express
-create basic server
-use postman
-add nodemon
-improve API
-add .gitignore
-add database object
-add post API
-send data in plain text, look at req
-why use body-parser library, google "express request body"
-postman x-www-urlencoded, application/json requests
-change request type to JSON
-add middleware that prints time of every API request
-bcrypt (users object in database) (https://www.abeautifulsite.net/hashing-passwords-with-nodejs-and-bcrypt)
-http codes (https://www.restapitutorial.com/httpstatuscodes.html)
-install jwt (https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-tokens-9f811a92bb52)
-add token verification, set expiration (theory - https://jwt.io/introduction/, online token debugger - https://jwt.io/)
-asyncronous function - setTimeout example, startWork/finishWork example
-serving static files (with sendFile first, then with express.static)
-modular code
+How to install mySql:
+https://medium.com/@bobtodski/installing-mysql-on-mac-88d39eea8bfd
 
-Adding MongoDB:
-1) brew install mongodb
-2) brew services start mongodb
-3) Download Mongo GUI like Robo 3T
-4) Node mongodb setup without mongoose https://flaviocopes.com/node-mongodb/
-5) install mongoose
+Steps:
+1) "brew install mysql" - to install
+"brew services start mysql" - to launch mysql server
+(optional) "mysql -uroot" - to enter mysql terminal
+(optional) "mysql_secure_installation" - to change password
 
-(Optional) About asyncronous module exports
-https://stackoverflow.com/questions/20315434/node-js-asynchronous-module-loading
+2) Download SqlPro GUI and connect to DB
 
-6) Mongoose example: https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
-7) Mongoose example2: https://blog.cloudboost.io/everything-you-need-to-know-about-mongoose-63fcf8564d52
+If you get the error:
+"Authentication plugin 'caching_sha2_password' cannot be loaded: dlopen(/usr/local/mysql/lib/plugin/caching_sha2_password.so, 2): image not found"
 
-8) Troubleshooting for .find not calling the callback
-https://stackoverflow.com/questions/16109788/why-mongodb-find-never-got-to-my-callback
+Then go to terminal and enter mysql, then in mysql:
 
-9) Difference between .exec((err, res)), .then(result), and callback inside
+"ALTER USER 'username'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
 
-10) Refactor by moving database methods into controller
+where username is your mysql username (by default, you can use "root") and password is your root password which
+is empty by default
 
-11) Set up mLab cluster and connect in Robo 3T
-
-12) Installing PostgresSQL https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8
-
-13) Deployment
-Heroku login, CLI, heroku logs --tail, heroku restart, setting up ENV, modifying definition of PORT in the app, secret.js, whitelisting
-
-
-
+3) How to use sequelize with node
+    a) https://www.codementor.io/mirko0/how-to-use-sequelize-with-node-and-express-i24l67cuz
+    b) read documentation, http://docs.sequelizejs.com/manual/models-usage.html

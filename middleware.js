@@ -23,8 +23,7 @@ const authenticate = function(req, res, next){
         }
         //Check if user exists in the database
         const username = decodedToken.username;
-        User.findOne({username: username}).then(function(user){
-            console.log(user);
+        User.findOne({where: {username: username}}).then(function(user){
             if(!user){
                 return res.status(HTTP_UNAUTHORIZED).send('Please sign up');
             }

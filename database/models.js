@@ -1,16 +1,20 @@
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const { db, Sequelize } = require('./db.js');
 
-let placeSchema = new Schema({
-    location: {type: String, required: true},
-    distance: {type: Number, required: false},
-    user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+const Place = db.define('place', {
+    id: {type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
+    location: {type: Sequelize.STRING, required: true},
+    distance: {type: Sequelize.INTEGER, required: false}
+})
+
+const User = db.define('user', {
+    id: {type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
+    username: {type: Sequelize.STRING, required: true, unique: true},
+    password: {type: Sequelize.STRING, required: true}
 });
 
-let userSchema = new Schema({
-    username: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-});
+Place.belongsTo(User); //Add userId foreign key to Place
+// User.hasMany(Place); //Add userId foreign key to Place
 
-module.exports.Place = mongoose.model('Place', placeSchema);
-module.exports.User = mongoose.model('User', userSchema);
+
+module.exports.Place = Place;
+module.exports.User = User;
